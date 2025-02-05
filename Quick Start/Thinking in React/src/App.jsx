@@ -2,17 +2,17 @@ import {useState} from 'react';
 
 function ProductCategoryRow({category}) {
   return (
-    <tr>
+      <tr>
       <th colSpan="2">
         {category}
       </th>
     </tr>
-  )
+  );
 }
 
 function ProductRow({product}) {
   const name = product.stocked ? product.name :
-    <span style={{ color: 'red' }}>
+      <span style={{color: 'red'}}>
       {product.name}
     </span>;
 
@@ -21,7 +21,7 @@ function ProductRow({product}) {
       <td>{name}</td>
       <td>{product.price}</td>
     </tr>
-  )
+  );
 }
 
 function ProductTable({products, filterText, isStockOnly}) {
@@ -38,19 +38,19 @@ function ProductTable({products, filterText, isStockOnly}) {
     if (product.category !== lastCategory) {
       rows.push(
           <ProductCategoryRow
-            category={product.category}
-            key={product.category}
-          />
+              category={product.category}
+              key={product.category}
+          />,
       );
     }
     rows.push(
         <ProductRow
-          product={product}
-          key={product.name}
-        />
+            product={product}
+            key={product.name}
+        />,
     );
     lastCategory = product.category;
-  })
+  });
 
   return (
     <table>
@@ -62,24 +62,33 @@ function ProductTable({products, filterText, isStockOnly}) {
       </thead>
       <tbody>{rows}</tbody>
     </table>
-  )
+  );
 }
 
-function SearchBar({filterText, isStockOnly}) {
-  return(
+function SearchBar({
+                     filterText,
+                     isStockOnly,
+                     onFilterTextChange,
+                     onInStockOnlyChange,
+}) {
+  return (
       <form>
         <input
-          type="text"
-          value={filterText}
-          placeholder="Search" />
+            type="text"
+            value={filterText}
+            placeholder="Search"
+            onChange={(e) => onFilterTextChange(e.target.value)}
+        />
         <label>
           <input
-            type="checkbox"
-            checked={isStockOnly} />
+              type="checkbox"
+              checked={isStockOnly}
+              onChange={(e) => onInStockOnlyChange(e.target.checked)}
+          />
           {SEARCHBAR_CHECKBOX_LABEL}
         </label>
       </form>
-  )
+  );
 }
 
 function FilterableProductTable({products}) {
@@ -87,30 +96,32 @@ function FilterableProductTable({products}) {
   const [isStockOnly, setIsStockOnly] = useState(false);
 
   return (
-    <div>
+      <div>
       <SearchBar
-        filterText={filterText}
-        isStockOnly={isStockOnly} />
+          filterText={filterText}
+          isStockOnly={isStockOnly}
+          onFilterTextChange={setFilterText}
+          onInStockOnlyChange={setIsStockOnly}/>
       <ProductTable
-        products={products}
-        filterText={filterText}
-        isStockOnly={isStockOnly} />/
+          products={products}
+          filterText={filterText}
+          isStockOnly={isStockOnly}/>
     </div>
-  )
+  );
 }
 
 const PRODUCTS = [
-  {category: "Fruits", price: "$1", stocked: true, name: "Apple"},
-  {category: "Fruits", price: "$1", stocked: true, name: "Dragonfruit"},
-  {category: "Fruits", price: "$2", stocked: false, name: "Passionfruit"},
-  {category: "Vegetables", price: "$2", stocked: true, name: "Spinach"},
-  {category: "Vegetables", price: "$4", stocked: false, name: "Pumpkin"},
-  {category: "Vegetables", price: "$1", stocked: true, name: "Peas"}
+  {category: 'Fruits', price: '$1', stocked: true, name: 'Apple'},
+  {category: 'Fruits', price: '$1', stocked: true, name: 'Dragonfruit'},
+  {category: 'Fruits', price: '$2', stocked: false, name: 'Passionfruit'},
+  {category: 'Vegetables', price: '$2', stocked: true, name: 'Spinach'},
+  {category: 'Vegetables', price: '$4', stocked: false, name: 'Pumpkin'},
+  {category: 'Vegetables', price: '$1', stocked: true, name: 'Peas'},
 ];
 
 const SEARCHBAR_CHECKBOX_LABEL = ' Only show products in stock';
 
 export default function App() {
-  return <FilterableProductTable products={PRODUCTS} />;
+  return <FilterableProductTable products={PRODUCTS}/>;
 };
 
